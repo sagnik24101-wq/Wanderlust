@@ -37,6 +37,9 @@
       display: flex;
       align-items: center;
     }
+    .card-text{
+      color:#777;
+    }
   </style>
   <div id="filters">
     <div class="filter">
@@ -107,9 +110,9 @@
       <a href="/listings/<%= listing._id %>" class="listing-link">
         <div class="card col listing-card">
           <img src="<%= listing.image.url%>" class="card-img-top" alt="listing-image" style="height: 20rem;">
-          <div class="card-img-overlay">@WanderLust</div>
+          <div class="card-img-overlay"></div>
           <div class="card-body">
-            <p class="card-text">
+            <p class="card-text" >
               <b>
                 <%= listing.title %>
               </b>

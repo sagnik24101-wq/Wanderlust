@@ -1,58 +1,158 @@
 <style>
-    .search-btn{
+    .search-btn {
         background-color: #fe424d;
         color: #fff;
         border-radius: 25px;
-        padding:0 1rem 0 1rem;
-
+        padding: 0 1rem;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border: none;
+        transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
     }
-    .search-btn:hover{
-        background-color: #fe424d;
+    .search-btn:hover {
+        background-color: #d9323c;
         color: #fff;
-        
+        transform: scale(1.04);
+        box-shadow: 0 6px 24px rgba(254,66,77,0.30);
     }
-    .search-btn i{
+    .search-btn i {
         display: inline;
-        margin-right: .05rem;
+        margin-right: 0.35rem;
     }
-    .search-inp{
+    .search-inp {
         border-radius: 25px;
-        padding:0.5rem 3rem 0.5rem 3rem;
-        
+        padding: 0.5rem 1.25rem;
+        border: 1.5px solid var(--border, #e5e7eb);
+        background: var(--white, #fff);
+        color: var(--text, #222);
+        font-size: 0.875rem;
+        transition: border-color 0.25s, box-shadow 0.25s, background 0.4s, color 0.4s;
+    }
+    .search-inp:focus {
+        border-color: #fe424d;
+        box-shadow: 0 0 0 3px rgba(254,66,77,0.15);
+        outline: none;
+    }
+    .search-inp::placeholder {
+        color: var(--muted, #6b7280);
     }
 </style>
 
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="/listings">
+            <i class="fa-solid fa-compass"></i>
+        </a>
+
+        <!-- Mobile toggler -->
+        <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+            <!-- Left links -->
             <div class="navbar-nav">
                 <a class="nav-link" href="/listings">Explore</a>
-
-
             </div>
+
+            <!-- Search bar -->
             <div class="navbar-nav ms-auto">
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2 search-inp" type="search" placeholder="Search destinations"  />
-                    <button class="btn search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+                    <input class="form-control me-2 search-inp"
+                        type="search"
+                        placeholder="Search destinations" />
+                    <button class="btn search-btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>Search
+                    </button>
                 </form>
             </div>
-            <div class="navbar-nav ms-auto">
+
+            <!-- Right links + dark toggle -->
+            <div class="navbar-nav ms-auto align-items-center gap-1">
+
                 <a class="nav-link" href="/listings/new">Add new Listing</a>
+
                 <% if(!currUser){ %>
                     <a class="nav-link" href="/signup"><b>SignUp</b></a>
                     <a class="nav-link" href="/login"><b>LogIn</b></a>
-                    <%}%>
-                        <% if(currUser){ %>
-                            <a class="nav-link" href="/logout"><b>LogOut</b></a>
-                            <% }%>
+                <% } %>
 
+                <% if(currUser){ %>
+                    <a class="nav-link" href="/logout"><b>LogOut</b></a>
+                <% } %>
+
+                <!-- ── Dark Mode Toggle ── -->
+                <button class="dark-toggle ms-2"
+                        id="darkToggle"
+                        aria-label="Toggle dark mode"
+                        aria-pressed="false"
+                        type="button">
+
+                    <!-- Sun icon -->
+                    <span class="dark-toggle__sun" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"/>
+                            <line x1="12" y1="2"  x2="12" y2="5"/>
+                            <line x1="12" y1="19" x2="12" y2="22"/>
+                            <line x1="4.22" y1="4.22"  x2="6.34"  y2="6.34"/>
+                            <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+                            <line x1="2"  y1="12" x2="5"  y2="12"/>
+                            <line x1="19" y1="12" x2="22" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="6.34"  y2="17.66"/>
+                            <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22"/>
+                        </svg>
+                    </span>
+
+                    <!-- Sliding thumb -->
+                    <span class="dark-toggle__thumb" aria-hidden="true"></span>
+
+                    <!-- Moon icon -->
+                    <span class="dark-toggle__moon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+                        </svg>
+                    </span>
+
+                </button>
 
             </div>
         </div>
     </div>
 </nav>
+
+
+<script>
+    (function () {
+        const toggle = document.getElementById('darkToggle');
+        if (!toggle) return;
+
+        /* Apply saved theme before paint — prevents flash */
+        const saved = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        document.documentElement.setAttribute('data-theme', saved);
+        toggle.setAttribute('aria-pressed', String(saved === 'dark'));
+
+        /* Click handler */
+        toggle.addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark'
+                ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            toggle.setAttribute('aria-pressed', String(next === 'dark'));
+        });
+
+        /* Navbar shadow on scroll */
+        window.addEventListener('scroll', () => {
+            document.querySelector('.navbar')
+                ?.classList.toggle('scrolled', window.scrollY > 10);
+        });
+    })();
+</script>
